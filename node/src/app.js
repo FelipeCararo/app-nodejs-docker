@@ -19,7 +19,6 @@ class AppController {
   }
 
   routes() {
-    // this.express.use(require('./routes'));
     this.express.use('/', routes);
   }
 }
