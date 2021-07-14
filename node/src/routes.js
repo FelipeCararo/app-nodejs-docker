@@ -8,11 +8,11 @@ const CitieController = require('./app/controllers/CitieController');
 const ClientController = require('./app/controllers/ClientController');
 
 routes.use('/', SessionController.routes());
-routes.use('/user', UserController.routes());
 
 routes.use(authMiddleware);
 
 // Rotas autenticadas
+routes.use('/user', UserController.routes());
 routes.use('/client', ClientController.routes());
 routes.use('/citie', CitieController.routes());
 
