@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 const request = require('supertest');
 
 const app = require('../../src/app');
@@ -137,7 +138,7 @@ describe('Clients validation:', () => {
     });
 
     const response = await request(app)
-      .put(`/client/999`)
+      .put('/client/999')
       .send({
         name: 'Joãozinho',
       })
@@ -152,7 +153,7 @@ describe('Clients validation:', () => {
     });
 
     const response = await request(app)
-      .delete(`/client/999`)
+      .delete('/client/999')
       .set('Authorization', `Bearer ${user.generateToken()}`);
 
     expect(response.status).toBe(404);

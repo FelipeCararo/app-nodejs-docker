@@ -4,10 +4,14 @@ const User = require('../models/User');
 const routes = express.Router();
 
 class SessionController {
+  constructor() {
+    this.User = User;
+  }
+
   async store(req, res) {
     const { email, password } = req.body;
 
-    const user = await User.findOne({ where: { email } });
+    const user = await this.User.findOne({ where: { email } });
 
     if (!user) {
       return res.status(401).json({ message: 'User not found' });
@@ -25,10 +29,11 @@ class SessionController {
 
   /**
    * Aviso de conexão bem sucedida de exemplo
-   * @param {Object} req
+   * @param {Object} _req
    * @param {Object} res
    */
-  async connect(req, res) {
+  // eslint-disable-next-line class-methods-use-this
+  async connect(_req, res) {
     return res.status(200).json({ msg: 'Api Conectada.' });
   }
 

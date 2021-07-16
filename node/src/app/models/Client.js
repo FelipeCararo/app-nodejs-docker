@@ -1,3 +1,4 @@
+// eslint-disable-next-line import/no-extraneous-dependencies
 const { Sequelize, Model } = require('sequelize');
 
 class Client extends Model {
@@ -38,7 +39,7 @@ class Client extends Model {
         timestamps: true,
         createdAt: 'created_at',
         updatedAt: 'updated_at',
-      }
+      },
     );
 
     return this;

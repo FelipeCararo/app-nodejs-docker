@@ -11,13 +11,10 @@ routes.use('/', SessionController.routes());
 
 routes.use(authMiddleware);
 
-// Rotas autenticadas
 routes.use('/user', UserController.routes());
 routes.use('/client', ClientController.routes());
 routes.use('/citie', CitieController.routes());
 
-routes.get('/dashboard', (req, res) => {
-  return res.status(200).send();
-});
+routes.get('/dashboard', (req, res) => res.status(200).send());
 
 module.exports = routes;

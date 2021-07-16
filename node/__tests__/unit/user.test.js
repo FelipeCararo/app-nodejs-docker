@@ -1,4 +1,5 @@
-require('../../src/database/');
+/* eslint-disable no-undef */
+require('../../src/database');
 const bcrypt = require('bcryptjs');
 
 const User = require('../../src/app/models/User');

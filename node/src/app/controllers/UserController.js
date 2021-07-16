@@ -1,11 +1,16 @@
 const express = require('express');
 const Yup = require('yup');
+// eslint-disable-next-line import/no-extraneous-dependencies
 const { Op } = require('sequelize');
 const User = require('../models/User');
 
 const routes = express.Router();
 
 class UserController {
+  constructor() {
+    this.User = User;
+  }
+
   /**
    * Listagem dos usuários
    * @param {Object} req
@@ -62,14 +67,14 @@ class UserController {
       };
     }
 
-    const users = await User.findAndCountAll({
+    const users = await this.User.findAndCountAll({
       where,
       limit,
       offset,
       order: User.sequelize.literal(`${order} ${sort}`),
     });
 
-    const total_pages = Math.ceil(users.count / limit);
+    const totalPages = Math.ceil(users.count / limit);
 
     return res.status(200).json({
       items: users.rows,
@@ -77,8 +82,8 @@ class UserController {
       limit: parseInt(limit, 10),
       page: parseInt(page, 10),
       offset,
-      total_pages,
-      has_more: page < total_pages,
+      total_pages: totalPages,
+      has_more: page < totalPages,
     });
   }
 
@@ -89,7 +94,7 @@ class UserController {
    */
   async find(req, res) {
     const { userId: id } = req.params;
-    const user = await User.findByPk(id);
+    const user = await this.User.findByPk(id);
 
     if (!user) {
       return res.status(404).json({ error: 'Usuário não encontrado' });
@@ -116,7 +121,7 @@ class UserController {
     const { name, email, password } = params;
 
     try {
-      const user = await User.create({
+      const user = await this.User.create({
         name,
         email,
         password,
@@ -135,7 +140,7 @@ class UserController {
    */
   async delete(req, res) {
     const { userId } = req.params;
-    const user = await User.findByPk(userId);
+    const user = await this.User.findByPk(userId);
 
     if (user) {
       await user.destroy();

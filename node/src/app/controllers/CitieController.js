@@ -1,11 +1,16 @@
 const express = require('express');
 const Yup = require('yup');
+// eslint-disable-next-line import/no-extraneous-dependencies
 const { Op } = require('sequelize');
 const Citie = require('../models/Citie');
 
 const routes = express.Router();
 
 class CitieController {
+  constructor() {
+    this.Citie = Citie;
+  }
+
   /**
    * Listagem das cidades
    * @param {Object} req
@@ -66,18 +71,18 @@ class CitieController {
       where,
       limit,
       offset,
-      order: Citie.sequelize.literal(`${order} ${sort}`),
+      order: this.Citie.sequelize.literal(`${order} ${sort}`),
     });
 
-    const total_pages = Math.ceil(cities.count / limit);
+    const totalPages = Math.ceil(cities.count / limit);
     return res.json({
       items: cities.rows,
       total: cities.count,
       limit: parseInt(limit, 10),
       page: parseInt(page, 10),
       offset,
-      total_pages,
-      has_more: page < total_pages,
+      total_pages: totalPages,
+      has_more: page < totalPages,
     });
   }
 
@@ -88,7 +93,7 @@ class CitieController {
    */
   async find(req, res) {
     const { citieId: id } = req.params;
-    const citie = await Citie.findByPk(id);
+    const citie = await this.Citie.findByPk(id);
 
     if (!citie) {
       return res.status(404).json({ error: 'Cidade não encontrada' });
@@ -114,7 +119,7 @@ class CitieController {
     const { name, state } = params;
 
     try {
-      const citie = await Citie.create({
+      const citie = await this.Citie.create({
         name,
         state,
       });

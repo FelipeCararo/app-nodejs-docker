@@ -1,10 +1,9 @@
-require('./database/');
+require('./database');
 require('dotenv').config({
   path: process.env.NODE_ENV === 'test' ? '.env.test' : '.env',
 });
-const routes = require('./routes');
-
 const express = require('express');
+const routes = require('./routes');
 
 class AppController {
   constructor() {

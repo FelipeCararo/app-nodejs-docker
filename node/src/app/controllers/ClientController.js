@@ -1,11 +1,16 @@
 const express = require('express');
 const Yup = require('yup');
+// eslint-disable-next-line import/no-extraneous-dependencies
 const { Op } = require('sequelize');
 const Client = require('../models/Client');
 
 const routes = express.Router();
 
 class ClientController {
+  constructor() {
+    this.Client = Client;
+  }
+
   /**
    * Listagem dos clientes
    * @param {Object} req
@@ -54,22 +59,22 @@ class ClientController {
       };
     }
 
-    const clients = await Client.findAndCountAll({
+    const clients = await this.Client.findAndCountAll({
       where,
       limit,
       offset,
       order: Client.sequelize.literal(`${order} ${sort}`),
     });
 
-    const total_pages = Math.ceil(clients.count / limit);
+    const totalPages = Math.ceil(clients.count / limit);
     return res.json({
       items: clients.rows,
       total: clients.count,
       limit: parseInt(limit, 10),
       page: parseInt(page, 10),
       offset,
-      total_pages,
-      has_more: page < total_pages,
+      total_pages: totalPages,
+      has_more: page < totalPages,
     });
   }
 
@@ -80,7 +85,7 @@ class ClientController {
    */
   async find(req, res) {
     const { clientId: id } = req.params;
-    const client = await Client.findByPk(id);
+    const client = await this.Client.findByPk(id);
 
     if (!client) {
       return res.status(404).json({ error: 'Cliente não encontrado' });
@@ -106,14 +111,16 @@ class ClientController {
       })
       .validate(req.body);
 
-    const { name, sex, birthdate, age, cit_id } = params;
+    const {
+      name, sex, birthdate, age, cit_id: citId,
+    } = params;
 
-    const client = await Client.create({
+    const client = await this.Client.create({
       name,
       sex,
       birthdate,
       age,
-      cit_id,
+      cit_id: citId,
     });
 
     if (!client) {
@@ -130,7 +137,7 @@ class ClientController {
    */
   async update(req, res) {
     const { clientId } = req.params;
-    const client = await Client.findByPk(clientId);
+    const client = await this.Client.findByPk(clientId);
 
     if (!client) {
       return res.status(404).json({ error: 'Cliente não encontrado' });
@@ -170,7 +177,7 @@ class ClientController {
    */
   async delete(req, res) {
     const { clientId } = req.params;
-    const client = await Client.findByPk(clientId);
+    const client = await this.Client.findByPk(clientId);
 
     if (client) {
       await client.destroy();

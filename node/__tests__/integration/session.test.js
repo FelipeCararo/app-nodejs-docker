@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 const request = require('supertest');
 
 const app = require('../../src/app');
@@ -69,7 +70,7 @@ describe('Authentication', () => {
   it('Não deve ser capaz de acessar rotas privadas com token jwt inválido', async () => {
     const response = await request(app)
       .get('/dashboard')
-      .set('Authorization', `Bearer 123123`);
+      .set('Authorization', 'Bearer 123123');
 
     expect(response.status).toBe(401);
   });
